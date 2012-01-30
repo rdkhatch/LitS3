@@ -1,0 +1,1923 @@
+Index: LitS3.sln
+===================================================================
+--- LitS3.sln	(revision 109)
++++ LitS3.sln	(working copy)
+@@ -1,11 +1,21 @@
+ ﻿
+-Microsoft Visual Studio Solution File, Format Version 10.00
+-# Visual Studio 2008
++Microsoft Visual Studio Solution File, Format Version 11.00
++# Visual Studio 2010
+ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LitS3", "LitS3\LitS3.csproj", "{C564E026-D515-4E8B-ADED-36087E89443E}"
+ EndProject
+-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LitS3.Tests", "LitS3.Tests\LitS3.Tests.csproj", "{42FF1CA7-7D73-4EBB-BA20-1BBBB9A10DAB}"
++Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LitS3.UnitTests", "LitS3.UnitTests\LitS3.UnitTests.csproj", "{678068BD-9265-4FC2-ACB1-F6A85CCD5238}"
+ EndProject
++Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{66993540-5042-48A9-905F-52B3890CAF28}"
++	ProjectSection(SolutionItems) = preProject
++		LitS3.vsmdi = LitS3.vsmdi
++		Local.testsettings = Local.testsettings
++		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
++	EndProjectSection
++EndProject
+ Global
++	GlobalSection(TestCaseManagementSettings) = postSolution
++		CategoryFile = LitS3.vsmdi
++	EndGlobalSection
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+ 		Debug|Any CPU = Debug|Any CPU
+ 		Release|Any CPU = Release|Any CPU
+@@ -15,10 +25,10 @@
+ 		{C564E026-D515-4E8B-ADED-36087E89443E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{C564E026-D515-4E8B-ADED-36087E89443E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+ 		{C564E026-D515-4E8B-ADED-36087E89443E}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{42FF1CA7-7D73-4EBB-BA20-1BBBB9A10DAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{42FF1CA7-7D73-4EBB-BA20-1BBBB9A10DAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{42FF1CA7-7D73-4EBB-BA20-1BBBB9A10DAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{42FF1CA7-7D73-4EBB-BA20-1BBBB9A10DAB}.Release|Any CPU.Build.0 = Release|Any CPU
++		{678068BD-9265-4FC2-ACB1-F6A85CCD5238}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
++		{678068BD-9265-4FC2-ACB1-F6A85CCD5238}.Debug|Any CPU.Build.0 = Debug|Any CPU
++		{678068BD-9265-4FC2-ACB1-F6A85CCD5238}.Release|Any CPU.ActiveCfg = Release|Any CPU
++		{678068BD-9265-4FC2-ACB1-F6A85CCD5238}.Release|Any CPU.Build.0 = Release|Any CPU
+ 	EndGlobalSection
+ 	GlobalSection(SolutionProperties) = preSolution
+ 		HideSolutionNode = FALSE
+Index: LitS3.Tests/app.config
+===================================================================
+--- LitS3.Tests/app.config	(revision 109)
++++ LitS3.Tests/app.config	(working copy)
+@@ -1,18 +0,0 @@
+-﻿<?xml version="1.0" encoding="utf-8" ?>
+-<configuration>
+-    <configSections>
+-        <sectionGroup name="applicationSettings" type="System.Configuration.ApplicationSettingsGroup, System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" >
+-            <section name="LitS3.Tests.Properties.Settings" type="System.Configuration.ClientSettingsSection, System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false" />
+-        </sectionGroup>
+-    </configSections>
+-    <applicationSettings>
+-        <LitS3.Tests.Properties.Settings>
+-            <setting name="AccessKeyID" serializeAs="String">
+-                <value />
+-            </setting>
+-            <setting name="SecretAccessKey" serializeAs="String">
+-                <value />
+-            </setting>
+-        </LitS3.Tests.Properties.Settings>
+-    </applicationSettings>
+-</configuration>
+\ No newline at end of file
+Index: LitS3.Tests/LitS3.Tests.csproj
+===================================================================
+--- LitS3.Tests/LitS3.Tests.csproj	(revision 109)
++++ LitS3.Tests/LitS3.Tests.csproj	(working copy)
+@@ -1,78 +0,0 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
+-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+-  <PropertyGroup>
+-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+-    <ProductVersion>9.0.21022</ProductVersion>
+-    <SchemaVersion>2.0</SchemaVersion>
+-    <ProjectGuid>{42FF1CA7-7D73-4EBB-BA20-1BBBB9A10DAB}</ProjectGuid>
+-    <OutputType>Exe</OutputType>
+-    <AppDesignerFolder>Properties</AppDesignerFolder>
+-    <RootNamespace>LitS3.Tests</RootNamespace>
+-    <AssemblyName>LitS3.Tests</AssemblyName>
+-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+-    <FileAlignment>512</FileAlignment>
+-  </PropertyGroup>
+-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+-    <DebugSymbols>true</DebugSymbols>
+-    <DebugType>full</DebugType>
+-    <Optimize>false</Optimize>
+-    <OutputPath>bin\Debug\</OutputPath>
+-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+-    <ErrorReport>prompt</ErrorReport>
+-    <WarningLevel>4</WarningLevel>
+-    <UseVSHostingProcess>false</UseVSHostingProcess>
+-  </PropertyGroup>
+-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+-    <DebugType>pdbonly</DebugType>
+-    <Optimize>true</Optimize>
+-    <OutputPath>bin\Release\</OutputPath>
+-    <DefineConstants>TRACE</DefineConstants>
+-    <ErrorReport>prompt</ErrorReport>
+-    <WarningLevel>4</WarningLevel>
+-  </PropertyGroup>
+-  <ItemGroup>
+-    <Reference Include="System" />
+-    <Reference Include="System.Core">
+-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+-    </Reference>
+-    <Reference Include="System.Xml.Linq">
+-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+-    </Reference>
+-    <Reference Include="System.Data.DataSetExtensions">
+-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+-    </Reference>
+-    <Reference Include="System.Data" />
+-    <Reference Include="System.Xml" />
+-  </ItemGroup>
+-  <ItemGroup>
+-    <Compile Include="Program.cs" />
+-    <Compile Include="Properties\AssemblyInfo.cs" />
+-    <Compile Include="Properties\Settings.Designer.cs">
+-      <AutoGen>True</AutoGen>
+-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+-      <DependentUpon>Settings.settings</DependentUpon>
+-    </Compile>
+-  </ItemGroup>
+-  <ItemGroup>
+-    <ProjectReference Include="..\LitS3\LitS3.csproj">
+-      <Project>{C564E026-D515-4E8B-ADED-36087E89443E}</Project>
+-      <Name>LitS3</Name>
+-    </ProjectReference>
+-  </ItemGroup>
+-  <ItemGroup>
+-    <None Include="App.config" />
+-    <None Include="Properties\Settings.settings">
+-      <Generator>SettingsSingleFileGenerator</Generator>
+-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+-    </None>
+-  </ItemGroup>
+-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+-       Other similar extension points exist, see Microsoft.Common.targets.
+-  <Target Name="BeforeBuild">
+-  </Target>
+-  <Target Name="AfterBuild">
+-  </Target>
+-  -->
+-</Project>
+\ No newline at end of file
+Index: LitS3.Tests/Program.cs
+===================================================================
+--- LitS3.Tests/Program.cs	(revision 109)
++++ LitS3.Tests/Program.cs	(working copy)
+@@ -1,338 +0,0 @@
+-﻿using System;
+-using System.Collections.Generic;
+-using System.Linq;
+-using System.Text;
+-using LitS3.Tests.Properties;
+-using System.Net;
+-using System.IO;
+-
+-namespace LitS3.Tests
+-{
+-    class Program
+-    {
+-        static void Main(string[] args)
+-        {
+-            if (string.IsNullOrEmpty(Settings.Default.AccessKeyID) ||
+-                string.IsNullOrEmpty(Settings.Default.SecretAccessKey))
+-            {
+-                Console.WriteLine("You need to edit the LitS3.Tests.exe.config file and enter your S3 login information to run these tests.");
+-            }
+-            else
+-            {
+-                RunS3Tests();
+-            }
+-
+-            Console.WriteLine("Press enter to exit.");
+-            Console.ReadLine();
+-        }
+-
+-        static void RunS3Tests()
+-        {
+-            // This is basically a bunch of testing code written either for the LitS3 homepage
+-            // or to attempt to reproduce various submitted issues.
+-
+-            var s3 = new S3Service
+-            {
+-                AccessKeyID = Settings.Default.AccessKeyID,
+-                SecretAccessKey = Settings.Default.SecretAccessKey
+-            };
+-            
+-            s3.UseSubdomains = true;
+-            //s3.CreateBucketInEurope("lits3-demo-europe");
+-            s3.UseSsl = false;
+-            s3.BeforeAuthorize += (o, a) => { a.Request.Proxy = new WebProxy("http://192.168.104.1:7777"); };
+-
+-            string bucket = "lits3-fashionable" + new Random().Next();
+-
+-            s3.CreateBucketInEurope(bucket);
+-            //s3.AddObjectString("hello world", bucket, "hello.txt");
+-            s3.ListAllObjects(bucket);
+-            s3.DeleteBucket(bucket);
+-
+-            //s3.AddObjectString("hello world", "lits3-demo", "stuff/hello world.txt", "text/plain", default(CannedAcl));
+-
+-            //Console.WriteLine(s3.GetAuthorizedUri("lits3-demo", "stuff/hello world.txt", DateTime.Now.AddYears(1)).AbsoluteUri);
+-
+-            //Console.WriteLine(string.Join(",", s3.ListObjects("lits3-demo", "stuff/").Select(e => e.Name).ToArray()));
+-
+-            /*var addRequest = new AddObjectRequest(s3, "lits3-demo", "File 1.txt");
+-            addRequest.ContentLength = 0;
+-            addRequest.CacheControl = "max-age=3000, must-revalidate";
+-            addRequest.Expires = DateTime.Now.Date.AddYears(10);
+-            addRequest.GetResponse();
+-
+-            var getRequest = new GetObjectRequest(s3, "lits3-demo", "File 1.txt");
+-            GetObjectResponse getResponse = getRequest.GetResponse();
+-            Console.WriteLine("Expires: " + getResponse.Headers[HttpResponseHeader.Expires]);
+-            Console.WriteLine("CacheControl: " + getResponse.Headers[HttpResponseHeader.CacheControl]);*/
+-
+-            //s3.AddObjectString("Bonjour Europe!", "lits3-demo-europe", "bonjour.txt");
+-
+-            //Console.WriteLine(s3.GetObjectString("lits3-demo-europe", "bonjour.txt"));
+-
+-            //s3.ForEachBucket(Console.WriteLine);
+-
+-            /*string etag;
+-
+-            {
+-                var request = new AddObjectRequest(s3, "lits3-demo", "File 1.txt");
+-                request.ContentLength = 0;
+-                request.Metadata.Add("sky", "blue");
+-                var response = request.GetResponse();
+-                etag = response.ETag;
+-                Console.WriteLine("ETag: " + etag);
+-            }
+-
+-            {
+-                var request = new CopyObjectRequest(s3, "lits3-demo", "File 1.txt", "File 1 copy.txt");
+-                //request.CopyIfNoneMatchETag = etag;
+-                request.MetadataDirective = MetadataDirective.Replace;
+-                //request.Metadata.Add("shoes", "brown");
+-                request.GetResponse();
+-            }
+-
+-            {
+-                var request = new GetObjectRequest(s3, "lits3-demo", "File 1.txt", true);
+-                var response = request.GetResponse();
+-                Console.WriteLine("Sky on file1 is " + response.Metadata.Get("sky"));
+-            }
+-
+-            Console.WriteLine("File2 exists? " + s3.ObjectExists("lits3-demo", "File 2.txt"));
+-
+-            {
+-                var request = new GetObjectRequest(s3, "lits3-demo", "File 1 copy.txt", true);
+-                var response = request.GetResponse();
+-                Console.WriteLine("Sky on file2 is " + response.Metadata.Get("sky"));
+-                Console.WriteLine("Shoes on file2 are " + response.Metadata.Get("shoes"));
+-            }*/
+-
+-            /*s3.ForEachBucket(Console.WriteLine);
+-
+-            //> Bucket "mybucket"
+-            //> Bucket "myotherbucket"
+-            //> Bucket "lits3-demo"
+-
+-            s3.AddObjectString("This is file one!", "lits3-demo", "File 1.txt");
+-
+-            s3.ForEachObject("lits3-demo", Console.WriteLine);
+-
+-            //> S3Object "File 1.txt"
+-            //> Common Prefix "MyDirectory"
+-
+-            Console.WriteLine(s3.GetObjectString("lits3-demo", "File 1.txt"));
+-
+-            //> This is file one!
+-
+-            s3.CopyObject("lits3-demo", "File 1.txt", "File 1 copy.txt");
+-
+-            s3.ForEachObject("lits3-demo", Console.WriteLine);
+-
+-            //> S3Object "File 1 copy.txt"
+-            //> S3Object "File 1.txt"
+-            //> Common Prefix "MyDirectory"
+-
+-            s3.ForEachObject("lits3-demo", "MyDirectory/", Console.WriteLine);
+-
+-            //> S3Object "Other File.txt"
+-
+-            // "Need more flexibility?"
+-
+-            var request = new GetObjectRequest(s3, "lits3-demo", "File 1.txt");
+-
+-            request.BeginGetResponse(result =>
+-            {
+-                // comes in on a separate thread
+-                using (GetObjectResponse response = request.EndGetResponse(result))
+-                {
+-                    StreamReader reader = new StreamReader(response.GetResponseStream());
+-                    Console.WriteLine(reader.ReadToEnd());
+-
+-                    //> This is file one!
+-                }
+-            }, null);
+-
+-            // continues immediately without blocking...
+-            */
+-
+-
+-            //s3.AddObjectProgress += (s, e) => Console.WriteLine("Progress: " + e.ProgressPercentage);
+-            //s3.AddObjectString("Hello world", "lits3-demo", "Test File.txt");
+-
+-            //> Progress: 0
+-            //> Progress: 40
+-            //> ...
+-            //> Progress: 100
+-
+-
+-            /*string objectContents = "This will be written directly to S3.";
+-            long objectLength = objectContents.Length;
+-
+-            s3.AddObject("lits3-demo", "Directly Written.txt", objectLength, stream =>
+-            {
+-                // Create a StreamWriter to write some text data
+-                var writer = new StreamWriter(stream, Encoding.ASCII);
+-                writer.Write(objectContents);
+-                writer.Flush();
+-            });*/
+-
+-
+-            #region Some more testing code that needs to be refactored and separated into classes
+-
+-            //s3.CreateBucketInEurope("test-europe234234");
+-
+-            //var copyRequest = new CopyObjectRequest(s3, "spotlightmobile", "office.jpg", "office2.jpg");
+-            //copyRequest.GetResponse().Close();
+-
+-            //s3.CopyObject("spotlightmobile", "office.jpg", "office2.jpg");
+-
+-            /*
+-
+-            string testBucket = "ctu-test";
+-
+-            // Upload dynamically from a stream
+-            s3.AddObject(testBucket, "test-stream", 10, stream =>
+-            {
+-                // write 10 ASCII characters starting with "a"
+-                foreach (byte i in Enumerable.Range(65, 10))
+-                    stream.WriteByte(i);
+-            });
+-
+-            // Download dynamically from a stream
+-            using (Stream stream = s3.GetObjectStream(testBucket, "test-stream"))
+-                Console.WriteLine("Contents: " + new StreamReader(stream).ReadToEnd());
+-            
+-            // List all objects
+-            s3.ListAllObjects(testBucket, null, entry => Console.WriteLine("Found: " + entry));
+-
+-            
+-            //string testBucket = "ctu-test";
+-            //string testKey = "hello";
+-
+-            foreach (ListEntry entry in s3.ListObjects("ctu-beta", null))
+-                Console.WriteLine(entry);
+-
+-            Console.WriteLine("Bucket status of {0}: {1}", testBucket, s3.QueryBucket(testBucket));
+-
+-            //s3.DeleteBucket(testBucket);
+-
+-            s3.AddObjectString("four thousand years", testBucket, testKey, "text/plain", CannedAcl.Private);
+-
+-            Console.WriteLine(s3.GetObjectString(testBucket, testKey));
+-
+-            Console.WriteLine(s3.GetUrl(testBucket, testKey));
+-
+-            Console.WriteLine(s3.GetAuthorizedUrl(testBucket, testKey, DateTime.Now + TimeSpan.FromMinutes(10)));
+-
+-            //s3.DeleteObject("ctu-test", "hello");
+-
+-            s3.AddObjectString("jackdaws quartz", testBucket, "jackdaws quartz", "text/plain", CannedAcl.Private);
+-            s3.AddObjectString("one+two=three", testBucket, "one+two=three", "text/plain", CannedAcl.Private);
+-
+-            s3.UseSubdomains = false;
+-            s3.ListObjects("testing_special_chars", null).ForEach(i => Console.WriteLine(i));
+-
+-            Console.WriteLine(s3.GetObjectString(testBucket, "jackdaws quartz"));
+-            Console.WriteLine(s3.GetObjectString(testBucket, "one+two=three"));
+-
+-            Debug.WriteLine(s3.GetAuthorizedUrl(testBucket, "jackdaws quartz", DateTime.Now + TimeSpan.FromMinutes(10)));
+-            Debug.WriteLine(s3.GetAuthorizedUrl(testBucket, "one+two=three", DateTime.Now + TimeSpan.FromMinutes(10)));
+-
+-            
+-
+-            {
+-                // Create a file on S3 from the contents of a string
+-                s3.AddObjectString("some simple string content", testBucket, "test-object");
+-
+-                // Upload a local file 
+-                //s3.AddObject(@"H:\Music\Andrew Bird\The Swimming Hour\02 - Andrew Bird - The Swimming Hour - Core And Rind.mp3", testBucket, "andrew-bird.mp3");
+-
+-                // Upload dynamically from a stream
+-                var request = new AddObjectRequest(s3, testBucket, "test-stream");
+-                request.ContentLength = 36;
+-
+-                // Add some metadata
+-                request.Metadata["meaning-of-life"] = "42";
+-
+-                // This will call out to the S3 server and initiate an upload
+-                using (Stream requestStream = request.GetRequestStream())
+-                {
+-                    // Create a StreamWriter to write some text data
+-                    var writer = new StreamWriter(requestStream, Encoding.ASCII);
+-                    writer.Write("This will be written directly to S3.");
+-                    writer.Flush();
+-                }
+-
+-                // We're finished, so get the response to finish our submission. Remember to Close() it!
+-                request.GetResponse().Close();
+-            }
+-
+-            {
+-                // Get the contents of a file on S3 as a string
+-                Console.WriteLine(s3.GetObjectString(testBucket, "test-object"));
+-
+-                // Download a file from S3 into a local file
+-                //s3.GetObject(testBucket, "andrew-bird.mp3", @"C:\andrew-bird.mp3");
+-
+-                // Download dynamically into a stream
+-                var request = new GetObjectRequest(s3, testBucket, "test-stream");
+-
+-                using (GetObjectResponse response = request.GetResponse())
+-                {
+-                    // Read some metadata
+-                    Console.WriteLine("Meaning of life: " + response.Metadata["meaning-of-life"]); // prints "42"
+-
+-                    // Create a StreamReader to read the text data we stored above
+-                    var reader = new StreamReader(response.GetResponseStream(), Encoding.ASCII);
+-                    Console.WriteLine(reader.ReadLine());
+-                }
+-            }
+-
+-            {
+-                // Download dynamically into a stream
+-                var request = new GetObjectRequest(s3, testBucket, "andrew-bird.mp3");
+-
+-                using (GetObjectResponse response = request.GetResponse())
+-                {
+-                    var buffer = new byte[31768];
+-                    var bytesDownloaded = 0;
+-                    var responseStream = response.GetResponseStream();
+-
+-                    while (bytesDownloaded < response.ContentLength)
+-                    {
+-                        var bytesRead = responseStream.Read(buffer, 0, buffer.Length);
+-                        
+-                        // write the downloaded data somewhere...
+-                        
+-                        bytesDownloaded += bytesRead;
+-
+-                        var percent = (int)(((float)bytesDownloaded / (float)response.ContentLength) * 100);
+-
+-                        Console.CursorLeft = 0;
+-                        Console.Write("Downloading... {0}%", percent);
+-                    }
+-                }
+-            }
+-            */
+-
+-            //s3.CreateBucket("ctu-america");
+-            //Console.WriteLine("America in europe? " + s3.IsBucketInEurope("ctu-america"));
+-
+-            //s3.CreateBucketInEurope("ctu-europe");
+-            //Console.WriteLine("Europe in europe? " + s3.IsBucketInEurope("ctu-europe"));
+-
+-            /*var request = new GetAllBucketsRequest(s3);
+-
+-            request.BeginGetResponse(delegate (IAsyncResult result)
+-            {
+-                using (GetAllBucketsResponse response = request.EndGetResponse(result))
+-                {
+-                    foreach (Bucket bucket in response.Buckets)
+-                        Console.WriteLine(bucket);
+-                }
+-
+-            }, null);*/
+-
+-            #endregion
+-        }
+-    }
+-}
+Index: LitS3.Tests/Properties/AssemblyInfo.cs
+===================================================================
+--- LitS3.Tests/Properties/AssemblyInfo.cs	(revision 109)
++++ LitS3.Tests/Properties/AssemblyInfo.cs	(working copy)
+@@ -1,36 +0,0 @@
+-﻿using System.Reflection;
+-using System.Runtime.CompilerServices;
+-using System.Runtime.InteropServices;
+-
+-// General Information about an assembly is controlled through the following 
+-// set of attributes. Change these attribute values to modify the information
+-// associated with an assembly.
+-[assembly: AssemblyTitle("LitS3.Samples")]
+-[assembly: AssemblyDescription("")]
+-[assembly: AssemblyConfiguration("")]
+-[assembly: AssemblyCompany("")]
+-[assembly: AssemblyProduct("LitS3.Samples")]
+-[assembly: AssemblyCopyright("Copyright ©  2008")]
+-[assembly: AssemblyTrademark("")]
+-[assembly: AssemblyCulture("")]
+-
+-// Setting ComVisible to false makes the types in this assembly not visible 
+-// to COM components.  If you need to access a type in this assembly from 
+-// COM, set the ComVisible attribute to true on that type.
+-[assembly: ComVisible(false)]
+-
+-// The following GUID is for the ID of the typelib if this project is exposed to COM
+-[assembly: Guid("33d86a7f-1fce-4f87-88c6-20ac96307ec4")]
+-
+-// Version information for an assembly consists of the following four values:
+-//
+-//      Major Version
+-//      Minor Version 
+-//      Build Number
+-//      Revision
+-//
+-// You can specify all the values or you can default the Build and Revision Numbers 
+-// by using the '*' as shown below:
+-// [assembly: AssemblyVersion("1.0.*")]
+-[assembly: AssemblyVersion("1.0.0.0")]
+-[assembly: AssemblyFileVersion("1.0.0.0")]
+Index: LitS3.Tests/Properties/Settings.Designer.cs
+===================================================================
+--- LitS3.Tests/Properties/Settings.Designer.cs	(revision 109)
++++ LitS3.Tests/Properties/Settings.Designer.cs	(working copy)
+@@ -1,44 +0,0 @@
+-﻿//------------------------------------------------------------------------------
+-// <auto-generated>
+-//     This code was generated by a tool.
+-//     Runtime Version:4.0.20506.1
+-//
+-//     Changes to this file may cause incorrect behavior and will be lost if
+-//     the code is regenerated.
+-// </auto-generated>
+-//------------------------------------------------------------------------------
+-
+-namespace LitS3.Tests.Properties {
+-    
+-    
+-    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "10.0.0.0")]
+-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+-        
+-        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+-        
+-        public static Settings Default {
+-            get {
+-                return defaultInstance;
+-            }
+-        }
+-        
+-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+-        public string AccessKeyID {
+-            get {
+-                return ((string)(this["AccessKeyID"]));
+-            }
+-        }
+-        
+-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+-        public string SecretAccessKey {
+-            get {
+-                return ((string)(this["SecretAccessKey"]));
+-            }
+-        }
+-    }
+-}
+Index: LitS3.Tests/Properties/Settings.settings
+===================================================================
+--- LitS3.Tests/Properties/Settings.settings	(revision 109)
++++ LitS3.Tests/Properties/Settings.settings	(working copy)
+@@ -1,12 +0,0 @@
+-﻿<?xml version='1.0' encoding='utf-8'?>
+-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="LitS3.Tests.Properties" GeneratedClassName="Settings">
+-  <Profiles />
+-  <Settings>
+-    <Setting Name="AccessKeyID" Type="System.String" Scope="Application">
+-      <Value Profile="(Default)" />
+-    </Setting>
+-    <Setting Name="SecretAccessKey" Type="System.String" Scope="Application">
+-      <Value Profile="(Default)" />
+-    </Setting>
+-  </Settings>
+-</SettingsFile>
+\ No newline at end of file
+
+Property changes on: LitS3.UnitTests
+___________________________________________________________________
+Added: bugtraq:provideruuid
+   + {91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}
+Added: bugtraq:url
+   + http://code.google.com/p/lits3/issues/detail?id=%BUGID%
+Added: bugtraq:logregex
+   + [Ii]ssues?:?(\s*(,|and)?\s*#\d+)+
+(\d+)
+Added: bugtraq:providerparams
+   + project=lits3
+
+Index: LitS3.UnitTests/app.config
+===================================================================
+--- LitS3.UnitTests/app.config	(revision 0)
++++ LitS3.UnitTests/app.config	(revision 0)
+@@ -0,0 +1,25 @@
++<?xml version="1.0"?>
++<configuration>
++    <configSections>
++        <sectionGroup name="applicationSettings" type="System.Configuration.ApplicationSettingsGroup, System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
++            <section name="LitS3.UnitTests.Configuration.Settings" type="System.Configuration.ClientSettingsSection, System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false"/>
++        </sectionGroup>
++    </configSections>
++  
++    <applicationSettings>
++      
++      <LitS3.UnitTests.Configuration.Settings>
++        <setting name="TestBucketName" serializeAs="String">
++          <value></value>
++        </setting>
++        <setting name="AccessKeyID" serializeAs="String">
++          <value></value>
++        </setting>
++        <setting name="SecretAccessKey" serializeAs="String">
++          <value></value>
++        </setting>
++      </LitS3.UnitTests.Configuration.Settings>
++      
++    </applicationSettings>
++
++</configuration>
+Index: LitS3.UnitTests/BasicTests.cs
+===================================================================
+--- LitS3.UnitTests/BasicTests.cs	(revision 0)
++++ LitS3.UnitTests/BasicTests.cs	(revision 0)
+@@ -0,0 +1,43 @@
++﻿using LitS3.UnitTests.Support;
++using Microsoft.VisualStudio.TestTools.UnitTesting;
++
++namespace LitS3.UnitTests
++{
++    [TestClass]
++    public class BasicTests : S3TestBase
++    {
++        [TestMethod]
++        public void Create_empty_file()
++        {
++            var fileName = "emptyfile.txt";
++            bucket.DeleteFile(fileName);
++
++            var addRequest = bucket.CreateAddRequest(fileName);
++            Send(addRequest);
++
++            bucket.AssertFileExists(fileName);
++        }
++
++        [TestMethod]
++        public void Create_Text_File()
++        {
++            var fileName = "file2.txt";
++            bucket.DeleteFile(fileName);
++
++            var addRequest = bucket.CreateAddRequest(fileName);
++
++            // File Contents
++            addRequest.ContentType = "text/html";
++            var fileContents = "this is a test uploaded string";
++
++            // File Stream
++            var fileStream = GetStreamFromString(fileContents);
++
++            SendStream(addRequest, fileStream);
++            bucket.AssertFileExists(fileName);
++
++            var fileContentsAtS3 = bucket.GetObjectString(fileName);
++            Assert.AreEqual(fileContents, fileContentsAtS3);
++        }
++    }
++}
+
+Property changes on: LitS3.UnitTests\Configuration
+___________________________________________________________________
+Added: bugtraq:provideruuid
+   + {91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}
+Added: bugtraq:url
+   + http://code.google.com/p/lits3/issues/detail?id=%BUGID%
+Added: bugtraq:logregex
+   + [Ii]ssues?:?(\s*(,|and)?\s*#\d+)+
+(\d+)
+Added: bugtraq:providerparams
+   + project=lits3
+
+Index: LitS3.UnitTests/Configuration/Settings.Designer.cs
+===================================================================
+--- LitS3.UnitTests/Configuration/Settings.Designer.cs	(revision 0)
++++ LitS3.UnitTests/Configuration/Settings.Designer.cs	(revision 0)
+@@ -0,0 +1,53 @@
++﻿//------------------------------------------------------------------------------
++// <auto-generated>
++//     This code was generated by a tool.
++//     Runtime Version:4.0.30319.235
++//
++//     Changes to this file may cause incorrect behavior and will be lost if
++//     the code is regenerated.
++// </auto-generated>
++//------------------------------------------------------------------------------
++
++namespace LitS3.UnitTests.Configuration {
++    
++    
++    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
++    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "10.0.0.0")]
++    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
++        
++        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
++        
++        public static Settings Default {
++            get {
++                return defaultInstance;
++            }
++        }
++        
++        [global::System.Configuration.ApplicationScopedSettingAttribute()]
++        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
++        [global::System.Configuration.DefaultSettingValueAttribute("")]
++        public string TestBucketName {
++            get {
++                return ((string)(this["TestBucketName"]));
++            }
++        }
++        
++        [global::System.Configuration.ApplicationScopedSettingAttribute()]
++        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
++        [global::System.Configuration.DefaultSettingValueAttribute("")]
++        public string AccessKeyID {
++            get {
++                return ((string)(this["AccessKeyID"]));
++            }
++        }
++        
++        [global::System.Configuration.ApplicationScopedSettingAttribute()]
++        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
++        [global::System.Configuration.DefaultSettingValueAttribute("")]
++        public string SecretAccessKey {
++            get {
++                return ((string)(this["SecretAccessKey"]));
++            }
++        }
++    }
++}
+Index: LitS3.UnitTests/Configuration/Settings.settings
+===================================================================
+--- LitS3.UnitTests/Configuration/Settings.settings	(revision 0)
++++ LitS3.UnitTests/Configuration/Settings.settings	(revision 0)
+@@ -0,0 +1,15 @@
++﻿<?xml version='1.0' encoding='utf-8'?>
++<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="LitS3.UnitTests.Configuration" GeneratedClassName="Settings">
++  <Profiles />
++  <Settings>
++    <Setting Name="TestBucketName" Type="System.String" Scope="Application">
++      <Value Profile="(Default)"></Value>
++    </Setting>
++    <Setting Name="AccessKeyID" Type="System.String" Scope="Application">
++      <Value Profile="(Default)"></Value>
++    </Setting>
++    <Setting Name="SecretAccessKey" Type="System.String" Scope="Application">
++      <Value Profile="(Default)"></Value>
++    </Setting>
++  </Settings>
++</SettingsFile>
+\ No newline at end of file
+Index: LitS3.UnitTests/LitS3.UnitTests.csproj
+===================================================================
+--- LitS3.UnitTests/LitS3.UnitTests.csproj	(revision 0)
++++ LitS3.UnitTests/LitS3.UnitTests.csproj	(revision 0)
+@@ -0,0 +1,81 @@
++﻿<?xml version="1.0" encoding="utf-8"?>
++<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++  <PropertyGroup>
++    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
++    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
++    <ProductVersion>
++    </ProductVersion>
++    <SchemaVersion>2.0</SchemaVersion>
++    <ProjectGuid>{678068BD-9265-4FC2-ACB1-F6A85CCD5238}</ProjectGuid>
++    <OutputType>Library</OutputType>
++    <AppDesignerFolder>Properties</AppDesignerFolder>
++    <RootNamespace>LitS3.UnitTests</RootNamespace>
++    <AssemblyName>LitS3.UnitTests</AssemblyName>
++    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
++    <FileAlignment>512</FileAlignment>
++    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
++  </PropertyGroup>
++  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
++    <DebugSymbols>true</DebugSymbols>
++    <DebugType>full</DebugType>
++    <Optimize>false</Optimize>
++    <OutputPath>bin\Debug\</OutputPath>
++    <DefineConstants>DEBUG;TRACE</DefineConstants>
++    <ErrorReport>prompt</ErrorReport>
++    <WarningLevel>4</WarningLevel>
++  </PropertyGroup>
++  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
++    <DebugType>pdbonly</DebugType>
++    <Optimize>true</Optimize>
++    <OutputPath>bin\Release\</OutputPath>
++    <DefineConstants>TRACE</DefineConstants>
++    <ErrorReport>prompt</ErrorReport>
++    <WarningLevel>4</WarningLevel>
++  </PropertyGroup>
++  <ItemGroup>
++    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
++    <Reference Include="System" />
++    <Reference Include="System.Core">
++      <RequiredTargetFramework>3.5</RequiredTargetFramework>
++    </Reference>
++    <Reference Include="System.Runtime.Serialization" />
++  </ItemGroup>
++  <ItemGroup>
++    <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
++      <Visible>False</Visible>
++    </CodeAnalysisDependentAssemblyPaths>
++  </ItemGroup>
++  <ItemGroup>
++    <Compile Include="BasicTests.cs" />
++    <Compile Include="Configuration\Settings1.Designer.cs">
++      <AutoGen>True</AutoGen>
++      <DesignTimeSharedInput>True</DesignTimeSharedInput>
++      <DependentUpon>Settings.settings</DependentUpon>
++    </Compile>
++    <Compile Include="Properties\AssemblyInfo.cs" />
++    <Compile Include="SignedHeaderTests.cs" />
++    <Compile Include="Support\BucketContext.cs" />
++    <Compile Include="Support\S3TestBase.cs" />
++  </ItemGroup>
++  <ItemGroup>
++    <ProjectReference Include="..\LitS3\LitS3.csproj">
++      <Project>{C564E026-D515-4E8B-ADED-36087E89443E}</Project>
++      <Name>LitS3</Name>
++    </ProjectReference>
++  </ItemGroup>
++  <ItemGroup>
++    <None Include="app.config" />
++    <None Include="Configuration\Settings.settings">
++      <Generator>SettingsSingleFileGenerator</Generator>
++      <LastGenOutput>Settings1.Designer.cs</LastGenOutput>
++    </None>
++  </ItemGroup>
++  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
++  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
++       Other similar extension points exist, see Microsoft.Common.targets.
++  <Target Name="BeforeBuild">
++  </Target>
++  <Target Name="AfterBuild">
++  </Target>
++  -->
++</Project>
+\ No newline at end of file
+Index: LitS3.UnitTests/LitS3.UnitTests.csproj.vs10x
+===================================================================
+--- LitS3.UnitTests/LitS3.UnitTests.csproj.vs10x	(revision 0)
++++ LitS3.UnitTests/LitS3.UnitTests.csproj.vs10x	(revision 0)
+@@ -0,0 +1,3 @@
++This file contains Alternate Data Streams, storing configuration information used by CodeSMART 10 and VS10X Extensions.
++
++PLEASE DO NOT DELETE.
+\ No newline at end of file
+Index: LitS3.UnitTests/Program.cs
+===================================================================
+--- LitS3.UnitTests/Program.cs	(revision 0)
++++ LitS3.UnitTests/Program.cs	(revision 0)
+@@ -0,0 +1,334 @@
++﻿using System;
++using System.Net;
++using LitS3.UnitTests.Configuration;
++
++namespace LitS3.UnitTests
++{
++    class Program
++    {
++        static void Main(string[] args)
++        {
++            if (string.IsNullOrEmpty(Settings.Default.AccessKeyID) ||
++                string.IsNullOrEmpty(Settings.Default.SecretAccessKey))
++            {
++                Console.WriteLine("You need to edit the LitS3.Tests.exe.config file and enter your S3 login information to run these tests.");
++            }
++            else
++            {
++                RunS3Tests();
++            }
++
++            Console.WriteLine("Press enter to exit.");
++            Console.ReadLine();
++        }
++
++        static void RunS3Tests()
++        {
++            // This is basically a bunch of testing code written either for the LitS3 homepage
++            // or to attempt to reproduce various submitted issues.
++
++            var s3 = new S3Service
++            {
++                AccessKeyID = Settings.Default.AccessKeyID,
++                SecretAccessKey = Settings.Default.SecretAccessKey
++            };
++
++            s3.UseSubdomains = true;
++            //s3.CreateBucketInEurope("lits3-demo-europe");
++            s3.UseSsl = false;
++            s3.BeforeAuthorize += (o, a) => { a.Request.Proxy = new WebProxy("http://192.168.104.1:7777"); };
++
++            string bucket = "lits3-fashionable" + new Random().Next();
++
++            s3.CreateBucketInEurope(bucket);
++            //s3.AddObjectString("hello world", bucket, "hello.txt");
++            s3.ListAllObjects(bucket);
++            s3.DeleteBucket(bucket);
++
++            //s3.AddObjectString("hello world", "lits3-demo", "stuff/hello world.txt", "text/plain", default(CannedAcl));
++
++            //Console.WriteLine(s3.GetAuthorizedUri("lits3-demo", "stuff/hello world.txt", DateTime.Now.AddYears(1)).AbsoluteUri);
++
++            //Console.WriteLine(string.Join(",", s3.ListObjects("lits3-demo", "stuff/").Select(e => e.Name).ToArray()));
++
++            /*var addRequest = new AddObjectRequest(s3, "lits3-demo", "File 1.txt");
++            addRequest.ContentLength = 0;
++            addRequest.CacheControl = "max-age=3000, must-revalidate";
++            addRequest.Expires = DateTime.Now.Date.AddYears(10);
++            addRequest.GetResponse();
++
++            var getRequest = new GetObjectRequest(s3, "lits3-demo", "File 1.txt");
++            GetObjectResponse getResponse = getRequest.GetResponse();
++            Console.WriteLine("Expires: " + getResponse.Headers[HttpResponseHeader.Expires]);
++            Console.WriteLine("CacheControl: " + getResponse.Headers[HttpResponseHeader.CacheControl]);*/
++
++            //s3.AddObjectString("Bonjour Europe!", "lits3-demo-europe", "bonjour.txt");
++
++            //Console.WriteLine(s3.GetObjectString("lits3-demo-europe", "bonjour.txt"));
++
++            //s3.ForEachBucket(Console.WriteLine);
++
++            /*string etag;
++
++            {
++                var request = new AddObjectRequest(s3, "lits3-demo", "File 1.txt");
++                request.ContentLength = 0;
++                request.Metadata.Add("sky", "blue");
++                var response = request.GetResponse();
++                etag = response.ETag;
++                Console.WriteLine("ETag: " + etag);
++            }
++
++            {
++                var request = new CopyObjectRequest(s3, "lits3-demo", "File 1.txt", "File 1 copy.txt");
++                //request.CopyIfNoneMatchETag = etag;
++                request.MetadataDirective = MetadataDirective.Replace;
++                //request.Metadata.Add("shoes", "brown");
++                request.GetResponse();
++            }
++
++            {
++                var request = new GetObjectRequest(s3, "lits3-demo", "File 1.txt", true);
++                var response = request.GetResponse();
++                Console.WriteLine("Sky on file1 is " + response.Metadata.Get("sky"));
++            }
++
++            Console.WriteLine("File2 exists? " + s3.ObjectExists("lits3-demo", "File 2.txt"));
++
++            {
++                var request = new GetObjectRequest(s3, "lits3-demo", "File 1 copy.txt", true);
++                var response = request.GetResponse();
++                Console.WriteLine("Sky on file2 is " + response.Metadata.Get("sky"));
++                Console.WriteLine("Shoes on file2 are " + response.Metadata.Get("shoes"));
++            }*/
++
++            /*s3.ForEachBucket(Console.WriteLine);
++
++            //> Bucket "mybucket"
++            //> Bucket "myotherbucket"
++            //> Bucket "lits3-demo"
++
++            s3.AddObjectString("This is file one!", "lits3-demo", "File 1.txt");
++
++            s3.ForEachObject("lits3-demo", Console.WriteLine);
++
++            //> S3Object "File 1.txt"
++            //> Common Prefix "MyDirectory"
++
++            Console.WriteLine(s3.GetObjectString("lits3-demo", "File 1.txt"));
++
++            //> This is file one!
++
++            s3.CopyObject("lits3-demo", "File 1.txt", "File 1 copy.txt");
++
++            s3.ForEachObject("lits3-demo", Console.WriteLine);
++
++            //> S3Object "File 1 copy.txt"
++            //> S3Object "File 1.txt"
++            //> Common Prefix "MyDirectory"
++
++            s3.ForEachObject("lits3-demo", "MyDirectory/", Console.WriteLine);
++
++            //> S3Object "Other File.txt"
++
++            // "Need more flexibility?"
++
++            var request = new GetObjectRequest(s3, "lits3-demo", "File 1.txt");
++
++            request.BeginGetResponse(result =>
++            {
++                // comes in on a separate thread
++                using (GetObjectResponse response = request.EndGetResponse(result))
++                {
++                    StreamReader reader = new StreamReader(response.GetResponseStream());
++                    Console.WriteLine(reader.ReadToEnd());
++
++                    //> This is file one!
++                }
++            }, null);
++
++            // continues immediately without blocking...
++            */
++
++
++            //s3.AddObjectProgress += (s, e) => Console.WriteLine("Progress: " + e.ProgressPercentage);
++            //s3.AddObjectString("Hello world", "lits3-demo", "Test File.txt");
++
++            //> Progress: 0
++            //> Progress: 40
++            //> ...
++            //> Progress: 100
++
++
++            /*string objectContents = "This will be written directly to S3.";
++            long objectLength = objectContents.Length;
++
++            s3.AddObject("lits3-demo", "Directly Written.txt", objectLength, stream =>
++            {
++                // Create a StreamWriter to write some text data
++                var writer = new StreamWriter(stream, Encoding.ASCII);
++                writer.Write(objectContents);
++                writer.Flush();
++            });*/
++
++
++            #region Some more testing code that needs to be refactored and separated into classes
++
++            //s3.CreateBucketInEurope("test-europe234234");
++
++            //var copyRequest = new CopyObjectRequest(s3, "spotlightmobile", "office.jpg", "office2.jpg");
++            //copyRequest.GetResponse().Close();
++
++            //s3.CopyObject("spotlightmobile", "office.jpg", "office2.jpg");
++
++            /*
++
++            string testBucket = "ctu-test";
++
++            // Upload dynamically from a stream
++            s3.AddObject(testBucket, "test-stream", 10, stream =>
++            {
++                // write 10 ASCII characters starting with "a"
++                foreach (byte i in Enumerable.Range(65, 10))
++                    stream.WriteByte(i);
++            });
++
++            // Download dynamically from a stream
++            using (Stream stream = s3.GetObjectStream(testBucket, "test-stream"))
++                Console.WriteLine("Contents: " + new StreamReader(stream).ReadToEnd());
++            
++            // List all objects
++            s3.ListAllObjects(testBucket, null, entry => Console.WriteLine("Found: " + entry));
++
++            
++            //string testBucket = "ctu-test";
++            //string testKey = "hello";
++
++            foreach (ListEntry entry in s3.ListObjects("ctu-beta", null))
++                Console.WriteLine(entry);
++
++            Console.WriteLine("Bucket status of {0}: {1}", testBucket, s3.QueryBucket(testBucket));
++
++            //s3.DeleteBucket(testBucket);
++
++            s3.AddObjectString("four thousand years", testBucket, testKey, "text/plain", CannedAcl.Private);
++
++            Console.WriteLine(s3.GetObjectString(testBucket, testKey));
++
++            Console.WriteLine(s3.GetUrl(testBucket, testKey));
++
++            Console.WriteLine(s3.GetAuthorizedUrl(testBucket, testKey, DateTime.Now + TimeSpan.FromMinutes(10)));
++
++            //s3.DeleteObject("ctu-test", "hello");
++
++            s3.AddObjectString("jackdaws quartz", testBucket, "jackdaws quartz", "text/plain", CannedAcl.Private);
++            s3.AddObjectString("one+two=three", testBucket, "one+two=three", "text/plain", CannedAcl.Private);
++
++            s3.UseSubdomains = false;
++            s3.ListObjects("testing_special_chars", null).ForEach(i => Console.WriteLine(i));
++
++            Console.WriteLine(s3.GetObjectString(testBucket, "jackdaws quartz"));
++            Console.WriteLine(s3.GetObjectString(testBucket, "one+two=three"));
++
++            Debug.WriteLine(s3.GetAuthorizedUrl(testBucket, "jackdaws quartz", DateTime.Now + TimeSpan.FromMinutes(10)));
++            Debug.WriteLine(s3.GetAuthorizedUrl(testBucket, "one+two=three", DateTime.Now + TimeSpan.FromMinutes(10)));
++
++            
++
++            {
++                // Create a file on S3 from the contents of a string
++                s3.AddObjectString("some simple string content", testBucket, "test-object");
++
++                // Upload a local file 
++                //s3.AddObject(@"H:\Music\Andrew Bird\The Swimming Hour\02 - Andrew Bird - The Swimming Hour - Core And Rind.mp3", testBucket, "andrew-bird.mp3");
++
++                // Upload dynamically from a stream
++                var request = new AddObjectRequest(s3, testBucket, "test-stream");
++                request.ContentLength = 36;
++
++                // Add some metadata
++                request.Metadata["meaning-of-life"] = "42";
++
++                // This will call out to the S3 server and initiate an upload
++                using (Stream requestStream = request.GetRequestStream())
++                {
++                    // Create a StreamWriter to write some text data
++                    var writer = new StreamWriter(requestStream, Encoding.ASCII);
++                    writer.Write("This will be written directly to S3.");
++                    writer.Flush();
++                }
++
++                // We're finished, so get the response to finish our submission. Remember to Close() it!
++                request.GetResponse().Close();
++            }
++
++            {
++                // Get the contents of a file on S3 as a string
++                Console.WriteLine(s3.GetObjectString(testBucket, "test-object"));
++
++                // Download a file from S3 into a local file
++                //s3.GetObject(testBucket, "andrew-bird.mp3", @"C:\andrew-bird.mp3");
++
++                // Download dynamically into a stream
++                var request = new GetObjectRequest(s3, testBucket, "test-stream");
++
++                using (GetObjectResponse response = request.GetResponse())
++                {
++                    // Read some metadata
++                    Console.WriteLine("Meaning of life: " + response.Metadata["meaning-of-life"]); // prints "42"
++
++                    // Create a StreamReader to read the text data we stored above
++                    var reader = new StreamReader(response.GetResponseStream(), Encoding.ASCII);
++                    Console.WriteLine(reader.ReadLine());
++                }
++            }
++
++            {
++                // Download dynamically into a stream
++                var request = new GetObjectRequest(s3, testBucket, "andrew-bird.mp3");
++
++                using (GetObjectResponse response = request.GetResponse())
++                {
++                    var buffer = new byte[31768];
++                    var bytesDownloaded = 0;
++                    var responseStream = response.GetResponseStream();
++
++                    while (bytesDownloaded < response.ContentLength)
++                    {
++                        var bytesRead = responseStream.Read(buffer, 0, buffer.Length);
++                        
++                        // write the downloaded data somewhere...
++                        
++                        bytesDownloaded += bytesRead;
++
++                        var percent = (int)(((float)bytesDownloaded / (float)response.ContentLength) * 100);
++
++                        Console.CursorLeft = 0;
++                        Console.Write("Downloading... {0}%", percent);
++                    }
++                }
++            }
++            */
++
++            //s3.CreateBucket("ctu-america");
++            //Console.WriteLine("America in europe? " + s3.IsBucketInEurope("ctu-america"));
++
++            //s3.CreateBucketInEurope("ctu-europe");
++            //Console.WriteLine("Europe in europe? " + s3.IsBucketInEurope("ctu-europe"));
++
++            /*var request = new GetAllBucketsRequest(s3);
++
++            request.BeginGetResponse(delegate (IAsyncResult result)
++            {
++                using (GetAllBucketsResponse response = request.EndGetResponse(result))
++                {
++                    foreach (Bucket bucket in response.Buckets)
++                        Console.WriteLine(bucket);
++                }
++
++            }, null);*/
++
++            #endregion
++        }
++    }
++}
+
+Property changes on: LitS3.UnitTests\Properties
+___________________________________________________________________
+Added: bugtraq:provideruuid
+   + {91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}
+Added: bugtraq:url
+   + http://code.google.com/p/lits3/issues/detail?id=%BUGID%
+Added: bugtraq:logregex
+   + [Ii]ssues?:?(\s*(,|and)?\s*#\d+)+
+(\d+)
+Added: bugtraq:providerparams
+   + project=lits3
+
+Index: LitS3.UnitTests/Properties/AssemblyInfo.cs
+===================================================================
+--- LitS3.UnitTests/Properties/AssemblyInfo.cs	(revision 0)
++++ LitS3.UnitTests/Properties/AssemblyInfo.cs	(revision 0)
+@@ -0,0 +1,35 @@
++﻿using System.Reflection;
++using System.Runtime.CompilerServices;
++using System.Runtime.InteropServices;
++
++// General Information about an assembly is controlled through the following 
++// set of attributes. Change these attribute values to modify the information
++// associated with an assembly.
++[assembly: AssemblyTitle("LitS3.UnitTests")]
++[assembly: AssemblyDescription("")]
++[assembly: AssemblyConfiguration("")]
++[assembly: AssemblyCompany("")]
++[assembly: AssemblyProduct("LitS3.UnitTests")]
++[assembly: AssemblyCopyright("Copyright © 2011")]
++[assembly: AssemblyTrademark("")]
++[assembly: AssemblyCulture("")]
++
++// Setting ComVisible to false makes the types in this assembly not visible 
++// to COM components.  If you need to access a type in this assembly from 
++// COM, set the ComVisible attribute to true on that type.
++[assembly: ComVisible(false)]
++
++// The following GUID is for the ID of the typelib if this project is exposed to COM
++[assembly: Guid("46c71a10-3afe-4856-9e45-be9da3d6bcee")]
++
++// Version information for an assembly consists of the following four values:
++//
++//      Major Version
++//      Minor Version 
++//      Build Number
++//      Revision
++//
++// You can specify all the values or you can default the Build and Revision Numbers 
++// by using the '*' as shown below:
++[assembly: AssemblyVersion("1.0.0.0")]
++[assembly: AssemblyFileVersion("1.0.0.0")]
+Index: LitS3.UnitTests/SignedHeaderTests.cs
+===================================================================
+--- LitS3.UnitTests/SignedHeaderTests.cs	(revision 0)
++++ LitS3.UnitTests/SignedHeaderTests.cs	(revision 0)
+@@ -0,0 +1,172 @@
++﻿using System.Collections.Specialized;
++using System.IO;
++using System.Net;
++using System.Runtime.Serialization;
++using System.Threading;
++using LitS3.UnitTests.Support;
++using Microsoft.VisualStudio.TestTools.UnitTesting;
++
++namespace LitS3.UnitTests
++{
++    /// Allows Clients to communicate authorized requests directly with Amazon S3 - without the Secret Key. By first requesting the App Server (which has the Secret Key) to sign the requests header values & generate an Authorization header.
++    /// Much faster transfers to Amazon S3, because they are not proxied through an App Server.
++    /// 
++    /// Overview of Process:
++    /// 1.) Client converts any S3Request (ie, AddObjectRequest) to SignedHeaderRequest
++    /// 2.) Client --> sends SignedHeaderRequest --> to App Server
++    /// 3.) App Server signs SignedHeaderRequest's header values using Secret Key. (If App Server permits request)
++    /// 4.) Client --< receives SignedHeaderResponse --< from App Server
++    /// 5.) Client applies new signed Headers to original S3Request
++    /// 6.) Client --> sends S3Request --> directly to Amazon. Successfully.
++
++    [TestClass]
++    public class SignedHeaderTests : S3TestBase
++    {
++        static string testBucketName = "testbucket";
++
++        [TestMethod]
++        public void Test_Authorization_Request_Matches_Real_Authorization()
++        {
++            var fileName = "dummy filename";
++            bucket.DeleteFile(fileName);
++
++            var addRequest = bucket.CreateAddRequest(fileName);
++
++            // Upload Real File
++            Send(addRequest);
++            bucket.AssertFileExists(fileName);
++
++            // Get Real Authentication Header
++            var realAuthHeader = addRequest.WebRequest.Headers[HttpRequestHeader.Authorization];
++
++            // Create a Delay. Authorize method puts DateTime.Now into header. This will check for that.
++            Thread.Sleep(500);
++            var timeOfRequest = addRequest.WebRequest.Headers[S3Headers.AmazonDate];
++
++            // Without the Secret Key - Let's see if we can't match the realAuthHeader!!
++            var fakeRequest = bucket.CreateAddRequest_WithoutSecretKey(fileName);
++
++            // Set correct time for request
++            fakeRequest.WebRequest.Headers[S3Headers.AmazonDate] = timeOfRequest;
++
++            // Build Authorization Request
++            var authRequest = fakeRequest.BuildSignedHeaderRequest();
++
++            // Get Authentication Header
++            var authResponse = s3.ApproveSignedHeaderRequest(authRequest);
++
++            // Apply Authorization to S3 Request
++            fakeRequest.ApplySignedHeader(authResponse);
++
++            var ourAuthHeader = fakeRequest.WebRequest.Headers[HttpRequestHeader.Authorization];
++
++            // Authorization hashes should match!
++            Assert.AreEqual(realAuthHeader, ourAuthHeader);
++
++            // Upload - from Client!
++            bucket.DeleteFile(fileName);
++            Send(fakeRequest);
++            bucket.AssertFileExists(fileName);
++
++            // Show that our fakeRequest cannot be hijacked to do anything - other than what we've Authorized it for
++            bool hijackPrevented = false;
++            bucket.DeleteFile(fileName);
++            fakeRequest.WebRequest.Method = "Delete";
++            Send(fakeRequest);
++            bucket.AssertFileDoesNotExist(fileName);
++        }
++
++        [TestMethod]
++        public void Test_Authorization_Request_should_upload_to_Amazon()
++        {
++            var fileName = "serializedFileRequest.txt";
++            bucket.DeleteFile(fileName);
++
++            var addRequest = bucket.CreateAddRequest(fileName);
++
++            // Serialize headers, etc. into Authorization Request
++            var authRequest = addRequest.BuildSignedHeaderRequest();
++
++            // Server - Authorizes. Build Response to send back to Client
++            SignedHeaderResponse authResponse = s3.ApproveSignedHeaderRequest(authRequest);
++
++            // Client - Applies Server's Authorization to S3 Request
++            addRequest.ApplySignedHeader(authResponse);
++
++            Send(addRequest);
++
++            bucket.AssertFileExists(fileName);
++        }
++
++        [TestMethod]
++        public void Test_Serialize_Authentication_Request_and_Response()
++        {
++            var addRequest = bucket.CreateAddRequest("dummy");
++
++            // Serialize - Authentication Request
++            var authRequest = addRequest.BuildSignedHeaderRequest();
++            var authRequest2 = SerializeDeserialize(authRequest);
++
++            Assert.AreEqual(authRequest.BucketName, authRequest2.BucketName);
++            Assert.AreEqual(authRequest.ContentType, authRequest2.ContentType);
++            Assert.AreEqual(authRequest.Method, authRequest2.Method);
++            Assert.AreEqual(authRequest.RequestURI, authRequest2.RequestURI);
++            AssertNameValueCollectionsEqual(authRequest.Headers, authRequest2.Headers);
++
++            // Serialize - Authentication Response
++            var authResponse = s3.ApproveSignedHeaderRequest(authRequest2);
++            var authResponse2 = SerializeDeserialize(authResponse);
++
++            Assert.AreEqual(authResponse.IsAuthorized, authResponse2.IsAuthorized);
++            AssertNameValueCollectionsEqual(authResponse.Headers, authResponse2.Headers);
++
++        }
++
++
++
++
++
++        void AssertNameValueCollectionsEqual(NameValueCollection collection1, NameValueCollection collection2)
++        {
++            Assert.AreEqual(collection1.Count, collection2.Count);
++            for (int i = 0; i < collection1.Count; i++)
++            {
++                var pair1Key = collection1.Keys[i];
++                var pair2Key = collection2.Keys[i];
++                Assert.AreEqual(pair1Key, pair2Key);
++
++                var pair1Value = collection1[i];
++                var pair2Value = collection2[i];
++                Assert.AreEqual(pair1Value, pair2Value);
++            }
++        }
++
++
++
++        static SignedHeaderRequest SerializeDeserialize(SignedHeaderRequest authRequest)
++        {
++            var serializer = new NetDataContractSerializer();
++            var stream = new MemoryStream();
++            serializer.Serialize(stream, authRequest);
++            stream.Position = 0;
++            var addRequest2 = (SignedHeaderRequest)serializer.Deserialize(stream);
++
++            return addRequest2;
++        }
++
++        SignedHeaderResponse SerializeDeserialize(SignedHeaderResponse authResponse)
++        {
++            var serializer = new NetDataContractSerializer();
++            var stream = new MemoryStream();
++            serializer.Serialize(stream, authResponse);
++            stream.Position = 0;
++            var result = (SignedHeaderResponse)serializer.Deserialize(stream);
++
++            return result;
++        }
++
++    }
++
++
++
++}
+
+Property changes on: LitS3.UnitTests\Support
+___________________________________________________________________
+Added: bugtraq:provideruuid
+   + {91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}
+Added: bugtraq:url
+   + http://code.google.com/p/lits3/issues/detail?id=%BUGID%
+Added: bugtraq:logregex
+   + [Ii]ssues?:?(\s*(,|and)?\s*#\d+)+
+(\d+)
+Added: bugtraq:providerparams
+   + project=lits3
+
+Index: LitS3.UnitTests/Support/BucketContext.cs
+===================================================================
+--- LitS3.UnitTests/Support/BucketContext.cs	(revision 0)
++++ LitS3.UnitTests/Support/BucketContext.cs	(revision 0)
+@@ -0,0 +1,81 @@
++﻿using System;
++using System.Linq;
++using Microsoft.VisualStudio.TestTools.UnitTesting;
++
++
++namespace LitS3.UnitTests
++{
++
++    public class BucketContext
++    {
++        public string BucketName { get; set; }
++        public S3Service Service { get; set; }
++    }
++
++
++    public static class BucketContextExtensions
++    {
++        public static void DeleteFile(this BucketContext bucket, string fileName)
++        {
++            bucket.Service.DeleteObject(bucket.BucketName, fileName);
++        }
++
++        public static void AssertFileExists(this BucketContext bucket, string fileName)
++        {
++            var match = bucket.Service.ListObjects(bucket.BucketName, fileName).OfType<ObjectEntry>().ToList();
++            Assert.IsTrue(match.Count == 1);
++            Assert.AreEqual(fileName, match.Single().Key);
++        }
++
++        public static void AssertFileDoesNotExist(this BucketContext bucket, string fileName)
++        {
++            var match = bucket.Service.ListObjects(bucket.BucketName, fileName).OfType<ObjectEntry>().ToList();
++            Assert.IsTrue(match.Count == 0);
++        }
++
++        public static AddObjectRequest CreateAddRequest(this BucketContext bucket, string filename)
++        {
++            return CreateAddRequest(bucket.Service, bucket.BucketName, filename);
++        }
++
++        /// <summary>
++        /// Creates AddRequest without knowledge of the SecretKey.  Used for testing SignedHeaderRequest/Response
++        /// </summary>
++        public static AddObjectRequest CreateAddRequest_WithoutSecretKey(this BucketContext bucket, string filename)
++        {
++            // Create Service without knowledge of the Secret Key
++            var serviceWithoutKeys = new S3Service();
++
++            return CreateAddRequest(serviceWithoutKeys, bucket.BucketName, filename);
++        }
++
++
++        static AddObjectRequest CreateAddRequest(S3Service service, string bucketName, string filename)
++        {
++            var addRequest = new AddObjectRequest(service, bucketName, filename);
++            addRequest.ContentLength = 0;
++
++            return addRequest;
++        }
++
++
++        public static string GetObjectString(this BucketContext bucket, string filename)
++        {
++            string contentType;
++            return bucket.Service.GetObjectString(bucket.BucketName, filename, out contentType);
++        }
++
++        public static string GetObjectString(this BucketContext bucket, string filename, out string contentType)
++        {
++            return bucket.Service.GetObjectString(bucket.BucketName, filename, out contentType);
++        }
++
++
++        public static Uri GetAuthorizedUri(this BucketContext bucket, string filename, DateTime expires)
++        {
++            return bucket.Service.GetAuthorizedUri(bucket.BucketName, filename, expires);
++        }
++
++
++    }
++}
+Index: LitS3.UnitTests/Support/S3TestBase.cs
+===================================================================
+--- LitS3.UnitTests/Support/S3TestBase.cs	(revision 0)
++++ LitS3.UnitTests/Support/S3TestBase.cs	(revision 0)
+@@ -0,0 +1,60 @@
++﻿using System.IO;
++using System.Text;
++using LitS3.UnitTests.Configuration;
++using Microsoft.VisualStudio.TestTools.UnitTesting;
++
++namespace LitS3.UnitTests.Support
++{
++    [TestClass]
++    public abstract class S3TestBase
++    {
++        protected S3Service s3;
++        protected BucketContext bucket;
++
++        [TestInitialize]
++        public void TestInitializing()
++        {
++            InitTest(Settings.Default);
++        }
++
++        internal virtual void InitTest(Settings settings)
++        {
++            s3 = new S3Service()
++            {
++                AccessKeyID = settings.AccessKeyID,
++                SecretAccessKey = settings.SecretAccessKey
++            };
++
++            bucket = new BucketContext() { BucketName = settings.TestBucketName, Service = s3 };
++        }
++
++
++
++
++        protected Stream GetStreamFromString(string fileContents)
++        {
++            UTF8Encoding encoding = new UTF8Encoding();
++            var fileBytes = encoding.GetBytes(fileContents);
++
++            return new MemoryStream(fileBytes);
++        }
++
++        protected void Send(AddObjectRequest addRequest)
++        {
++            var response = addRequest.GetResponse();
++            response.Close();
++        }
++
++        protected void SendStream(AddObjectRequest addRequest, Stream fileStream)
++        {
++            addRequest.ContentLength = fileStream.Length;
++
++            using (var outputStream = addRequest.GetRequestStream())
++            {
++                fileStream.CopyTo(outputStream);
++            }
++
++            Send(addRequest);
++        }
++    }
++}
+Index: LitS3/LitS3.csproj
+===================================================================
+--- LitS3/LitS3.csproj	(revision 109)
++++ LitS3/LitS3.csproj	(working copy)
+@@ -1,5 +1,5 @@
+ ﻿<?xml version="1.0" encoding="utf-8"?>
+-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+@@ -11,6 +11,25 @@
+     <AssemblyName>LitS3</AssemblyName>
+     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+     <FileAlignment>512</FileAlignment>
++    <FileUpgradeFlags>
++    </FileUpgradeFlags>
++    <OldToolsVersion>3.5</OldToolsVersion>
++    <UpgradeBackupLocation />
++    <PublishUrl>publish\</PublishUrl>
++    <Install>true</Install>
++    <InstallFrom>Disk</InstallFrom>
++    <UpdateEnabled>false</UpdateEnabled>
++    <UpdateMode>Foreground</UpdateMode>
++    <UpdateInterval>7</UpdateInterval>
++    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
++    <UpdatePeriodically>false</UpdatePeriodically>
++    <UpdateRequired>false</UpdateRequired>
++    <MapFileExtensions>true</MapFileExtensions>
++    <ApplicationRevision>0</ApplicationRevision>
++    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
++    <IsWebBootstrapper>false</IsWebBootstrapper>
++    <UseApplicationTrust>false</UseApplicationTrust>
++    <BootstrapperEnabled>true</BootstrapperEnabled>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+@@ -23,6 +42,7 @@
+     <DocumentationFile>bin\Debug\LitS3.XML</DocumentationFile>
+     <UseVSHostingProcess>true</UseVSHostingProcess>
+     <NoWarn>1591, 1573</NoWarn>
++    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+     <DebugType>pdbonly</DebugType>
+@@ -33,6 +53,7 @@
+     <WarningLevel>4</WarningLevel>
+     <DocumentationFile>bin\Release\LitS3.XML</DocumentationFile>
+     <UseVSHostingProcess>true</UseVSHostingProcess>
++    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+   </PropertyGroup>
+   <ItemGroup>
+     <Reference Include="System" />
+@@ -73,7 +94,25 @@
+     <Compile Include="S3Request.cs" />
+     <Compile Include="S3Response.cs" />
+     <Compile Include="S3Service.cs" />
++    <Compile Include="SignedHeaderRequest.cs" />
+   </ItemGroup>
++  <ItemGroup>
++    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
++      <Visible>False</Visible>
++      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
++      <Install>false</Install>
++    </BootstrapperPackage>
++    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
++      <Visible>False</Visible>
++      <ProductName>.NET Framework 3.5 SP1</ProductName>
++      <Install>true</Install>
++    </BootstrapperPackage>
++    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
++      <Visible>False</Visible>
++      <ProductName>Windows Installer 3.1</ProductName>
++      <Install>true</Install>
++    </BootstrapperPackage>
++  </ItemGroup>
+   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+        Other similar extension points exist, see Microsoft.Common.targets.
+Index: LitS3/LitS3.csproj.vs10x
+===================================================================
+--- LitS3/LitS3.csproj.vs10x	(revision 0)
++++ LitS3/LitS3.csproj.vs10x	(revision 0)
+@@ -0,0 +1,3 @@
++This file contains Alternate Data Streams, storing configuration information used by CodeSMART 10 and VS10X Extensions.
++
++PLEASE DO NOT DELETE.
+\ No newline at end of file
+Index: LitS3/S3Authorizer.cs
+===================================================================
+--- LitS3/S3Authorizer.cs	(revision 109)
++++ LitS3/S3Authorizer.cs	(working copy)
+@@ -31,7 +31,9 @@
+         /// </remarks>
+         public void AuthorizeRequest(HttpWebRequest request, string bucketName)
+         {
+-            request.Headers[S3Headers.AmazonDate] = DateTime.UtcNow.ToString("r");
++            // Set AmazonDate, if it has not yet been set
++            if (string.IsNullOrEmpty(request.Headers[S3Headers.AmazonDate]))
++                request.Headers[S3Headers.AmazonDate] = DateTime.UtcNow.ToString("r");
+ 
+             var stringToSign = new StringBuilder()
+                 .Append(request.Method).Append('\n')
+@@ -54,9 +56,9 @@
+ 
+             if (query == "?acl" || query == "?location" || query == "?logging" || query == "?torrent")
+                 stringToSign.Append(query);
+-            
++
+             string signed = Sign(stringToSign.ToString());
+-            
++
+             string authorization = string.Format("AWS {0}:{1}", service.AccessKeyID, signed);
+ 
+             request.Headers[HttpRequestHeader.Authorization] = authorization;
+Index: LitS3/S3Headers.cs
+===================================================================
+--- LitS3/S3Headers.cs	(revision 109)
++++ LitS3/S3Headers.cs	(working copy)
+@@ -1,7 +1,7 @@
+ ﻿
+ namespace LitS3
+ {
+-    static class S3Headers
++    public static class S3Headers
+     {
+         public const string AmazonHeaderPrefix = "x-amz-";
+         public const string AmazonDate = "x-amz-date";
+Index: LitS3/S3Request.cs
+===================================================================
+--- LitS3/S3Request.cs	(revision 109)
++++ LitS3/S3Request.cs	(working copy)
+@@ -9,20 +9,20 @@
+     /// </summary>
+     public abstract class S3Request
+     {
+-        string bucketName; // remember this for signing the request later
++        public string BucketName { get; private set; } // remember this for signing the request later
+ 
+         /// <summary>
+         /// Gets the service this request will operate against.
+         /// </summary>
+         public S3Service Service { get; private set; }
+ 
+-        protected HttpWebRequest WebRequest { get; private set; }
++        public HttpWebRequest WebRequest { get; private set; }
+ 
+         internal S3Request(S3Service service, string method, string bucketName, string objectKey,
+             string queryString)
+         {
+             this.Service = service;
+-            this.bucketName = bucketName;
++            this.BucketName = bucketName;
+             this.WebRequest = CreateWebRequest(method, objectKey, queryString);
+         }
+ 
+@@ -30,8 +30,8 @@
+         {
+             var uriString = new StringBuilder(Service.UseSsl ? "https://" : "http://");
+ 
+-            if (bucketName != null && Service.UseSubdomains)
+-                uriString.Append(bucketName).Append('.');
++            if (BucketName != null && Service.UseSubdomains)
++                uriString.Append(BucketName).Append('.');
+ 
+             uriString.Append(Service.Host);
+ 
+@@ -40,8 +40,8 @@
+ 
+             uriString.Append('/');
+ 
+-            if (bucketName != null && !Service.UseSubdomains)
+-                uriString.Append(bucketName).Append('/');
++            if (BucketName != null && !Service.UseSubdomains)
++                uriString.Append(BucketName).Append('/');
+ 
+             if (objectKey != null)
+                 uriString.Append(objectKey.EscapeS3Key());
+@@ -62,7 +62,7 @@
+             // S3 will never "timeout" a request. However, network delays may still cause a
+             // timeout according to WebRequest's ReadWriteTimeout property, which you can modify.
+             request.Timeout = int.MaxValue;
+-            
++
+             return request;
+         }
+ 
+@@ -132,7 +132,7 @@
+             if (S3Authorizer.IsAuthorized(WebRequest))
+                 throw new InvalidOperationException("This request has already been authorized.");
+ 
+-            Service.AuthorizeRequest(this, WebRequest, bucketName);
++            Service.AuthorizeRequest(this, WebRequest, BucketName);
+         }
+ 
+         protected void TryThrowS3Exception(WebException exception)
+@@ -141,7 +141,7 @@
+             // S3 sent us an <Error> message.
+             if (exception.Status == WebExceptionStatus.ProtocolError &&
+                 exception.Response.ContentType == "application/xml" &&
+-                (exception.Response.ContentLength > 0 || 
++                (exception.Response.ContentLength > 0 ||
+                  exception.Response.Headers[HttpResponseHeader.TransferEncoding] == "chunked"))
+             {
+                 var wrapped = S3Exception.FromWebException(exception);
+Index: LitS3/SignedHeaderRequest.cs
+===================================================================
+--- LitS3/SignedHeaderRequest.cs	(revision 0)
++++ LitS3/SignedHeaderRequest.cs	(revision 0)
+@@ -0,0 +1,98 @@
++﻿
++using System.Net;
++using System.Security;
++namespace LitS3
++{
++    /// <summary>
++    /// Allows Clients to communicate authorized requests directly with Amazon S3 - without the Secret Key. By first requesting the App Server (which has the Secret Key) to sign the requests header values & generate an Authorization header.
++    /// Represents a client's request to have the Owner sign & authorize the S3Request's header values with the Secret Key
++    /// </summary>
++    public class SignedHeaderRequest
++    {
++        public string BucketName { get; set; }
++        public string RequestURI { get; set; }
++        public WebHeaderCollection Headers { get; set; }
++        public string Method { get; set; }
++        public string ContentType { get; set; }
++
++    }
++
++    /// <summary>
++    /// Response from Owner with signed Authorization headers. Headers should be applied back to the S3Request.
++    /// </summary>
++    public class SignedHeaderResponse
++    {
++        public bool IsAuthorized { get; set; }
++        public WebHeaderCollection Headers { get; set; }
++    }
++
++
++    public static class AuthorizationRequestExtensions
++    {
++
++        /// <summary>
++        /// Client can convert any S3Request to a SignedHeaderRequest.  SignedHeaderRequest can be serialized & sent to App Server where it can be signed with the Secret Key.
++        /// </summary>
++        /// <param name="s3request"></param>
++        /// <returns></returns>
++        public static SignedHeaderRequest BuildSignedHeaderRequest(this S3Request s3request)
++        {
++            var httpRequest = s3request.WebRequest;
++
++            var authRequest = new SignedHeaderRequest()
++            {
++                // Bucket
++                BucketName = s3request.BucketName,
++
++                // HTTP Stuff
++                Headers = httpRequest.Headers,
++                Method = httpRequest.Method,
++                ContentType = httpRequest.ContentType,
++                RequestURI = httpRequest.RequestUri.ToString()
++            };
++
++            return authRequest;
++        }
++
++        /// <summary>
++        /// App Server uses this method to sign a SignedHeaderRequest with the Secret Key.  App Server sends SignedHeaderResponse back to Client.
++        /// </summary>
++        /// <param name="service"></param>
++        /// <param name="authRequest"></param>
++        /// <returns></returns>
++        public static SignedHeaderResponse ApproveSignedHeaderRequest(this S3Service service, SignedHeaderRequest authRequest)
++        {
++            // Create matching HTTP Request, so we can authorize for our requestor
++            var httpRequest = (HttpWebRequest)HttpWebRequest.Create(authRequest.RequestURI);
++            httpRequest.Headers.Add(authRequest.Headers);
++            httpRequest.Method = authRequest.Method;
++            httpRequest.ContentType = authRequest.ContentType;
++
++            // Authorize with Secret Key
++            service.AuthorizeRequest(null, httpRequest, authRequest.BucketName);
++
++            var authResponse = new SignedHeaderResponse()
++            {
++                Headers = httpRequest.Headers,
++                IsAuthorized = true
++            };
++
++            return authResponse;
++        }
++
++        /// <summary>
++        /// Client uses this method to apply a Signed Header to a S3Request. Allows Client to send an Authorized S3Request directly to Amazon - without the Secret Key.
++        /// </summary>
++        /// <param name="request"></param>
++        /// <param name="authResponse"></param>
++        public static void ApplySignedHeader(this S3Request request, SignedHeaderResponse authResponse)
++        {
++            if (authResponse.IsAuthorized == false)
++                throw new SecurityException("Unable to apply AuthorizationResponse to S3Request. The S3 AuthenticationResponse you received was not authorized.");
++
++            request.WebRequest.Headers.Clear();
++            request.WebRequest.Headers.Add(authResponse.Headers);
++        }
++    }
++
++}

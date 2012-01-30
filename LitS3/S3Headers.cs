@@ -1,7 +1,7 @@
 ﻿
 namespace LitS3
 {
-    static class S3Headers
+    public static class S3Headers
     {
         public const string AmazonHeaderPrefix = "x-amz-";
         public const string AmazonDate = "x-amz-date";

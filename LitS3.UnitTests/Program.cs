@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using LitS3.Tests.Properties;
 using System.Net;
-using System.IO;
+using LitS3.UnitTests.Configuration;
 
-namespace LitS3.Tests
+namespace LitS3.UnitTests
 {
     class Program
     {
@@ -36,7 +32,7 @@ namespace LitS3.Tests
                 AccessKeyID = Settings.Default.AccessKeyID,
                 SecretAccessKey = Settings.Default.SecretAccessKey
             };
-            
+
             s3.UseSubdomains = true;
             //s3.CreateBucketInEurope("lits3-demo-europe");
             s3.UseSsl = false;

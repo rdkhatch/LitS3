@@ -31,7 +31,9 @@ namespace LitS3
         /// </remarks>
         public void AuthorizeRequest(HttpWebRequest request, string bucketName)
         {
-            request.Headers[S3Headers.AmazonDate] = DateTime.UtcNow.ToString("r");
+            // Set AmazonDate, if it has not yet been set
+            if (string.IsNullOrEmpty(request.Headers[S3Headers.AmazonDate]))
+                request.Headers[S3Headers.AmazonDate] = DateTime.UtcNow.ToString("r");
 
             var stringToSign = new StringBuilder()
                 .Append(request.Method).Append('\n')
@@ -54,9 +56,9 @@ namespace LitS3
 
             if (query == "?acl" || query == "?location" || query == "?logging" || query == "?torrent")
                 stringToSign.Append(query);
-            
+
             string signed = Sign(stringToSign.ToString());
-            
+
             string authorization = string.Format("AWS {0}:{1}", service.AccessKeyID, signed);
 
             request.Headers[HttpRequestHeader.Authorization] = authorization;

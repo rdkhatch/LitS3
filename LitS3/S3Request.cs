@@ -9,20 +9,20 @@ namespace LitS3
     /// </summary>
     public abstract class S3Request
     {
-        string bucketName; // remember this for signing the request later
+        public string BucketName { get; private set; } // remember this for signing the request later
 
         /// <summary>
         /// Gets the service this request will operate against.
         /// </summary>
         public S3Service Service { get; private set; }
 
-        protected HttpWebRequest WebRequest { get; private set; }
+        public HttpWebRequest WebRequest { get; private set; }
 
         internal S3Request(S3Service service, string method, string bucketName, string objectKey,
             string queryString)
         {
             this.Service = service;
-            this.bucketName = bucketName;
+            this.BucketName = bucketName;
             this.WebRequest = CreateWebRequest(method, objectKey, queryString);
         }
 
@@ -30,8 +30,8 @@ namespace LitS3
         {
             var uriString = new StringBuilder(Service.UseSsl ? "https://" : "http://");
 
-            if (bucketName != null && Service.UseSubdomains)
-                uriString.Append(bucketName).Append('.');
+            if (BucketName != null && Service.UseSubdomains)
+                uriString.Append(BucketName).Append('.');
 
             uriString.Append(Service.Host);
 
@@ -40,8 +40,8 @@ namespace LitS3
 
             uriString.Append('/');
 
-            if (bucketName != null && !Service.UseSubdomains)
-                uriString.Append(bucketName).Append('/');
+            if (BucketName != null && !Service.UseSubdomains)
+                uriString.Append(BucketName).Append('/');
 
             if (objectKey != null)
                 uriString.Append(objectKey.EscapeS3Key());
@@ -62,7 +62,7 @@ namespace LitS3
             // S3 will never "timeout" a request. However, network delays may still cause a
             // timeout according to WebRequest's ReadWriteTimeout property, which you can modify.
             request.Timeout = int.MaxValue;
-            
+
             return request;
         }
 
@@ -132,7 +132,7 @@ namespace LitS3
             if (S3Authorizer.IsAuthorized(WebRequest))
                 throw new InvalidOperationException("This request has already been authorized.");
 
-            Service.AuthorizeRequest(this, WebRequest, bucketName);
+            Service.AuthorizeRequest(this, WebRequest, BucketName);
         }
 
         protected void TryThrowS3Exception(WebException exception)
@@ -141,7 +141,7 @@ namespace LitS3
             // S3 sent us an <Error> message.
             if (exception.Status == WebExceptionStatus.ProtocolError &&
                 exception.Response.ContentType == "application/xml" &&
-                (exception.Response.ContentLength > 0 || 
+                (exception.Response.ContentLength > 0 ||
                  exception.Response.Headers[HttpResponseHeader.TransferEncoding] == "chunked"))
             {
                 var wrapped = S3Exception.FromWebException(exception);
